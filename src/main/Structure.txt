@@ -1,0 +1,33 @@
+
+
+Todo list implementation Structure
+
+#Phase 1-  simple to do list
+case class model (done)
+add that to an in memory database (done) testing
+Expose the API (done)
+- insert
+- update
+- delete
+- retrieve
+extract the params as a case class and use it. (done)
+
+#Phase 1.1
+make circe to work with optional values, currently it is expecting an empty placeholder for value (in implementation)
+should hold the previous data at start-up. (in implementation)
+
+#Phase 2 -
+- Instead of sequential approach create actors to according to api
+- then implement the actors to do the task to enter data into in memory db.
+- made the map concurrent map, it can be accessed by multiple methods
+
+#Phase 3-
+- implement the api with zio and zLayer
+
+#phase 4 - may be before for after phase 3.
+- implement group task board
+    - group will have multiple participants
+    - allow them to modify things
+    - add and delete task based on the existing task model
+    - modify route to expose and inset data based on group or individual.
+    -
