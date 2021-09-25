@@ -12,7 +12,7 @@ object EncoderAndDecoders {
     item =>
       for{
         message <- item.get[String](Message)
-        description <- item.get[String](Description)
+        description <- item.getOrElse[String](Description)("")
       } yield UpdateModel(message, if(description.nonEmpty) Some(description) else None)
   }
 
@@ -22,11 +22,10 @@ object EncoderAndDecoders {
         taskId <- item.get[String](TaskId)
         authorName <- item.get[String](AuthorName)
         message <- item.get[String](Message)
-        description <- item.get[String](Description)
+        description <- item.getOrElse[String](Description)("")
         taskStatus <- item.get[String](TaskStatus)
       } yield Task(ID(taskId), authorName, message, if(description.nonEmpty) Some(description) else None, taskStatus)
   }
-
 
   private implicit val TaskEncoder: Encoder[Task] = new Encoder[Task] {
     override def apply(a: Task): Json = Json.obj(

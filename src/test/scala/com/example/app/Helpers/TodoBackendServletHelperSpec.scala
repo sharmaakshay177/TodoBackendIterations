@@ -12,7 +12,7 @@ class TodoBackendServletHelperSpec extends AnyFlatSpecLike {
   private val logger = Logger(clazz = getClass)
 
   private val TaskJsonStringWithAllFields =
-  """{
+    """{
     |    "id": "test-id-123",
     |    "author": "akshay",
     |    "message": "this is testing task to parse",
@@ -25,7 +25,6 @@ class TodoBackendServletHelperSpec extends AnyFlatSpecLike {
       |    "id": "test-id-123",
       |    "author": "akshay",
       |    "message": "this is testing task to parse",
-      |    "description": "",
       |    "taskStatus": "OPEN"
       |}""".stripMargin
 
@@ -37,8 +36,7 @@ class TodoBackendServletHelperSpec extends AnyFlatSpecLike {
 
   private val TaskUpdateJsonStringAllFieldsWithDescriptionPlaceHolder =
     """{
-      |    "message": "this is testing task to parse from update",
-      |    "description": ""
+      |    "message": "this is testing task to parse from update"
       |}""".stripMargin
 
 
@@ -84,13 +82,13 @@ class TodoBackendServletHelperSpec extends AnyFlatSpecLike {
 
     actualExpectedTask match {
       case Right(taskReceived) =>
-        logger.info(s"Update Task Received $taskReceived")
+        logger.info(s"Update Task Received for complete message: $taskReceived")
         taskReceived shouldBe expectedTask
     }
 
     actualExpectedTaskWithPlaceHolder match {
       case Right(taskReceived) =>
-        logger.info(s"Update Task Received $taskReceived")
+        logger.info(s"Update Task Received for Message not containing optional field $taskReceived")
         taskReceived shouldBe expectedPlaceHolderTask
     }
 
@@ -123,7 +121,7 @@ class TodoBackendServletHelperSpec extends AnyFlatSpecLike {
 
   }
 
-  "Json Encoder" should "give be able to final json converted from task retrieved according to user" in{
+  "Json Encoder" should "be able to final json converted from task retrieved according to user" in{
     val expectedJsonValue = """{"tasks":[{"id":"test-id-123","author":"akshay","message":"this is testing task to parse","description":"this is task description","taskStatus":"OPEN"}]}""".stripMargin
     val task = Task(
       ID("test-id-123"),

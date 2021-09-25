@@ -13,7 +13,7 @@ Expose the API (done)
 extract the params as a case class and use it. (done)
 
 #Phase 1.1
-make circe to work with optional values, currently it is expecting an empty placeholder for value (in implementation)
+make circe to work with optional values, currently it is expecting an empty placeholder for value (done)
 should hold the previous data at start-up. (in implementation)
 
 #Phase 2 -
