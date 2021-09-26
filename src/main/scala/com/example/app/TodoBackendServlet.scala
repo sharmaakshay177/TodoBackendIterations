@@ -52,7 +52,7 @@ class TodoBackendServlet extends ScalatraServlet {
   }
 
   //todo: refactor it delete method instead of post
-  post("delete/:taskId"){
+  post("/delete/:taskId"){
     logger.info(s"Request for ${request.getRequestURL}")
     val taskIdFromParams: String = params("taskId")
     logger.info(s"Request Received for Delete with ID: $taskIdFromParams")
