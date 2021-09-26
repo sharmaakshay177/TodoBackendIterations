@@ -3,6 +3,7 @@ val ScalatraVersion = "2.7.1"
 val ScalaLoggingVersion = "3.9.4"
 val Json4sVersion = "4.0.2"
 val circeVersion = "0.14.1"
+val AkkaVersion = "2.6.16"
 
 ThisBuild / scalaVersion := "2.13.6"
 ThisBuild / organization := "com.github.sharmaakshay177"
@@ -24,7 +25,9 @@ lazy val hello = (project in file("."))
       "org.eclipse.jetty" % "jetty-webapp" % "11.0.6" % "container",
       "javax.servlet" % "javax.servlet-api" % "4.0.1" % "provided",
       "org.scalamock" %% "scalamock" % "5.1.0" % Test,
-      "org.scalatest" %% "scalatest" % "3.2.9" % Test
+      "org.scalatest" %% "scalatest" % "3.2.9" % Test,
+      "com.typesafe.akka" %% "akka-actor" % AkkaVersion,
+      "com.typesafe.akka" %% "akka-testkit" % AkkaVersion % Test
     ),
   )
 
