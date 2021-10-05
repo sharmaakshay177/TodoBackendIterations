@@ -14,12 +14,16 @@ extract the params as a case class and use it. (done)
 
 #Phase 1.1
 make circe to work with optional values, currently it is expecting an empty placeholder for value (done)
-should hold the previous data at start-up. (in implementation)
+should hold the previous data at start-up. (---- in poc ----)
 
 #Phase 2 -
 - Instead of sequential approach create actors to according to api
 - then implement the actors to do the task to enter data into in memory db.
 - made the map concurrent map, it can be accessed by multiple methods
+
+https://stackoverflow.com/questions/37537266/how-to-generate-different-session-id-every-time-an-user-logins
+https://stackoverflow.com/questions/10224453/scalatra-session-without-cookies
+https://github.com/scalatra/scalatra-website-examples/blob/master/2.4/http/scalatra-http-demo/
 
 #Phase 3-
 - implement the api with zio and zLayer
