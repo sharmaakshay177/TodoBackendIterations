@@ -4,6 +4,7 @@ val ScalaLoggingVersion = "3.9.4"
 val Json4sVersion = "4.0.2"
 val circeVersion = "0.14.1"
 val AkkaVersion = "2.6.16"
+val HasherVersion = "1.2.2"
 
 ThisBuild / scalaVersion := "2.13.6"
 ThisBuild / organization := "com.github.sharmaakshay177"
@@ -27,7 +28,8 @@ lazy val hello = (project in file("."))
       "org.scalamock" %% "scalamock" % "5.1.0" % Test,
       "org.scalatest" %% "scalatest" % "3.2.9" % Test,
       "com.typesafe.akka" %% "akka-actor" % AkkaVersion,
-      "com.typesafe.akka" %% "akka-testkit" % AkkaVersion % Test
+      "com.typesafe.akka" %% "akka-testkit" % AkkaVersion % Test,
+      "com.outr" %% "hasher" % HasherVersion
     ),
   )
 

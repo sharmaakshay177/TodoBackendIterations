@@ -12,3 +12,10 @@ object MessageFieldsName {
   val TaskResponseHeader = "tasks"
 
 }
+
+object Operations{
+  val INSERT = "insert"
+  val UPDATE = "update"
+  val GET = "get"
+  val DELETE = "delete"
+}
