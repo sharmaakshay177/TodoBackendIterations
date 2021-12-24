@@ -6,6 +6,12 @@ val circeVersion = "0.14.1"
 val AkkaVersion = "2.6.16"
 val HasherVersion = "1.2.2"
 
+val zioDependencies = Seq(
+  "dev.zio" %% "zio" % "2.0.0-RC1",
+  "dev.zio" %% "zio-test" % "2.0.0-RC1",
+  "dev.zio" %% "zio-streams" % "2.0.0-RC1"
+  )
+
 ThisBuild / scalaVersion := "2.13.6"
 ThisBuild / organization := "com.github.sharmaakshay177"
 
@@ -30,7 +36,7 @@ lazy val hello = (project in file("."))
       "com.typesafe.akka" %% "akka-actor" % AkkaVersion,
       "com.typesafe.akka" %% "akka-testkit" % AkkaVersion % Test,
       "com.outr" %% "hasher" % HasherVersion
-    ),
+    ) ++ zioDependencies,
   )
 
 enablePlugins(SbtTwirl)
