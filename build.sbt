@@ -1,15 +1,21 @@
-
+// versions
 val ScalatraVersion = "2.7.1"
 val ScalaLoggingVersion = "3.9.4"
 val Json4sVersion = "4.0.2"
 val circeVersion = "0.14.1"
 val AkkaVersion = "2.6.16"
 val HasherVersion = "1.2.2"
+val attoVersion = "0.9.5"
+val zioVersion = "1.0.13"
+val zioMagicVersion = "0.3.11"
 
 val zioDependencies = Seq(
-  "dev.zio" %% "zio" % "2.0.0-RC1",
-  "dev.zio" %% "zio-test" % "2.0.0-RC1",
-  "dev.zio" %% "zio-streams" % "2.0.0-RC1"
+  "dev.zio" %% "zio" % zioVersion,
+  "dev.zio" %% "zio-test" % zioVersion,
+  "dev.zio" %% "zio-streams" % zioVersion,
+  "dev.zio" %% "zio-test-sbt" % zioVersion,
+  "org.tpolecat" %% "atto-core" % attoVersion,
+  "io.github.kitlangton" %% "zio-magic" % zioMagicVersion,
   )
 
 ThisBuild / scalaVersion := "2.13.6"

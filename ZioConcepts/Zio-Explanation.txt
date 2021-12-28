@@ -1,0 +1,54 @@
+/** Referential transparency
+    * an expression such as 2+2 is referentially transparent if we cna always replace
+    * the computation with its result in any program while still preserving its
+    * runtime behaviour
+    *
+    * Pure Expressions - Expressions without side effects
+    * Pure Functions - function whose body are pure expressions
+    */
+
+Module - A module is a group of functions that deals with
+         only one concern. Keeping the scope of a module limited, improves our ability to understand
+         code, in that we need to focus on only one topic at a time without juggling too many concepts at
+         the same time in our head
+
+
+Defining a Module
+1. Define an object ModuleName that gives the name to the module
+2. Within the ModuleName object, define a trait Service that defines the interface our module will expose (capabilities)
+3. Define a type alias like type ModuleName = Has[Service]
+4. Within the ModuleName object, define its different implementations through ZLayer
+5. Within the ModuleName object, define capability accessors
+
+New data types for defining a module
+Has, ZLayer
+Has -1. Has[A] represents a dependency on a service A.
+        Has[A] and Has[B] can be combined horizontally with the ++ operator for obtaining a
+        Has[A] with Has[B], representing a dependency on both services
+
+     2. The true power of the Has data type is that it is backed by an heterogeneous map from
+        service type to service implementation, so when you combine Has[A] with Has[B] ,
+        you can easily get access to the A and B services implementations.
+
+     3. We don't usually need to create a Has directly, but we do that through ZLayer
+
+ZLayer -
+    ZLayer data type is an immutable value which contains a description to build an environment.
+    ZLayer[-RIn, +E, +ROut <: Has[_]]
+
+    Layers can be combined in two different ways -
+    Horizontally : to build a layer that has the requirements and provide capabilities of both layers, we use ++ operators
+    Vertically   : the output of one layer is used as input for the subsequent layer,
+                   resulting in a layer with the requirement of the first and the output of the
+                   second layer, we use the >>> operator for this.
+
+    Finally, it’s worth mentioning that ZIO provides some type aliases for the ZLayer data type
+    which are very useful to represent some common use cases.
+
+    ZLayer.Succeed
+    ZLayer.fromEffect
+    ZLayer.fromFunction
+    ZLayer.fromManaged
+    ZLayer.fromService
+    ZLayer.fromServices
+
