@@ -130,4 +130,25 @@ object Exercises {
     } yield()
   }
 
+  //6. Implement the zipWith function in terms of the toy model of a ZIO
+  // effect. The function should return an effect that sequentially composes
+  // the specified effects, merging their results with the specified user-defined
+  // function.
+  final case class ZIO[-R, +E, +A](run: R => Either[E, A])
+
+  def zipWith[R, E, A, B, C](self: ZIO[R, E, A],
+                             that: ZIO[R, E, B])(f: (A, B) => C): ZIO[R, E, C] = {
+    val r1 = self.run
+    val r2 = that.run
+    ZIO[R, E, f(r1, r2)]
+  }
+
+  //7. Implement the collectAll function in terms of the toy model of a ZIO
+  // effect. The function should return an effect that sequentially collects the
+  // results of the specified collection of effects.
+  def collectAll[R, E, A]( in: Iterable[ZIO[R, E, A]] ): ZIO[R, E, List[A]] = {
+    val res = in.map(some => some.run).map(someA => List(someA)).flatten
+    ZIO[R, E, res]
+  }
+
 }

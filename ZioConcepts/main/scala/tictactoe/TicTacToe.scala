@@ -1,52 +1,57 @@
 package tictactoe
 
-import tictactoe.controller.ControllerLive
-import tictactoe.domain.State
-import tictactoe.gameLogic.GameLogicLive
-import tictactoe.mode.confirm.ConfirmModeLive
-import tictactoe.mode.game.GameModeLive
-import tictactoe.mode.menu.MenuModeLive
-import tictactoe.opponentAi.OpponentAiLive
-import tictactoe.parser.confirm.ConfirmCommandParserLive
-import tictactoe.parser.game.GameCommandParserLive
-import tictactoe.parser.menu.MenuCommandParserLive
-import tictactoe.runLoop.{RunLoop, RunLoopLive}
-import tictactoe.terminal.TerminalLive
-import tictactoe.view.confirm.ConfirmViewLive
-import tictactoe.view.game.GameViewLive
-import tictactoe.view.menu.MenuViewLive
+import tictactoe.controller.Controller
+import tictactoe.domain.{ AppError, State }
+import tictactoe.gameLogic.GameLogic
+import tictactoe.mode.confirm.ConfirmMode
+import tictactoe.mode.game.GameMode
+import tictactoe.mode.menu.MenuMode
+import tictactoe.opponentAi.OpponentAi
+import tictactoe.parser.confirm.ConfirmCommandParser
+import tictactoe.parser.game.GameCommandParser
+import tictactoe.parser.menu.MenuCommandParser
+import tictactoe.runLoop.RunLoop
+import tictactoe.terminal.Terminal
+import tictactoe.view.confirm.ConfirmView
+import tictactoe.view.game.GameView
+import tictactoe.view.menu.MenuView
 import zio.magic._
-import zio.{ExitCode, Has, URIO, ZEnv, ZIO}
+import zio.random.Random
+import zio.console.Console
+import zio.{ ExitCode, Has, ULayer, URIO, ZEnv, ZIO }
+import zio.Runtime
 
-object TicTacToe extends App {
+object TicTacToeRunning {
+  def run(args: Array[String]): Unit =
+    Runtime.default.unsafeRun(TicTacToe.run)
+}
 
-  val program: URIO[Has[RunLoop], Unit] = {
-    def loop(state: State): URIO[Has[RunLoop], Unit] =
-      RunLoop
-        .step(state)
-        .flatMap(loop)
-        .ignore
+object TicTacToe {
 
+  def run: URIO[zio.ZEnv, ExitCode] = program.provideLayer(prepareEnvironment).exitCode
+
+  val program: ZIO[RunLoop, AppError, Unit] = {
+    def loop(state: State): ZIO[RunLoop, AppError, Unit] =
+      RunLoop.step(state).flatMap(loop).ignore
     loop(State.initial)
   }
 
-  def run(args: List[String]): ZIO[ZEnv, Nothing, ExitCode] =
-    program
-      .injectCustom(
-        ControllerLive.layer,
-        GameLogicLive.layer,
-        ConfirmModeLive.layer,
-        GameModeLive.layer,
-        MenuModeLive.layer,
-        OpponentAiLive.layer,
-        ConfirmCommandParserLive.layer,
-        GameCommandParserLive.layer,
-        MenuCommandParserLive.layer,
-        RunLoopLive.layer,
-        TerminalLive.layer,
-        ConfirmViewLive.layer,
-        GameViewLive.layer,
-        MenuViewLive.layer
-      )
-      .exitCode
+  private val prepareEnvironment: ULayer[RunLoop] = {
+    val opponentAiNoDeps: ULayer[OpponentAi]                                                 = Random.live >>> OpponentAi.live
+    val confirmModeDeps: ULayer[ConfirmCommandParser with ConfirmView]                       =
+      ConfirmCommandParser.live ++ ConfirmView.live
+    val menuModeDeps: ULayer[MenuCommandParser with MenuView]                                =
+      MenuCommandParser.live ++ MenuView.live
+    val gameModeDeps: ULayer[GameCommandParser with GameView with GameLogic with OpponentAi] =
+      GameCommandParser.live ++ GameView.live ++ GameLogic.live ++ opponentAiNoDeps
+    val confirmModeNoDeps: ULayer[ConfirmMode]                                               = confirmModeDeps >>> ConfirmMode.live
+    val menuModeNoDeps: ULayer[MenuMode]                                                     = menuModeDeps >>> MenuMode.live
+    val gameModeNoDeps: ULayer[GameMode]                                                     = gameModeDeps >>> GameMode.live
+    val controllerDeps: ULayer[ConfirmMode with GameMode with MenuMode]                      =
+      confirmModeNoDeps ++ gameModeNoDeps ++ menuModeNoDeps
+    val controllerNoDeps: ULayer[Controller]                                                 = controllerDeps >>> Controller.live
+    val terminalNoDeps: ULayer[Terminal]                                                     = Console.live >>> Terminal.live
+    val runLoopNoDeps                                                                        = (controllerNoDeps ++ terminalNoDeps) >>> RunLoop.live
+    runLoopNoDeps
+  }
 }
